@@ -4,6 +4,7 @@
 #include "my_certs.h"
 
 #include <stdbool.h>
+#include <signal.h>
 
 struct mg_mgr mgr;
 static int watchdog_timer = 0;
@@ -106,6 +107,8 @@ static void timer_cb(void *arg) {
 }
 
 int main(void){
+    signal(SIGHUP, SIG_IGN);
+
     mg_mgr_init(&mgr);
     mg_http_listen(&mgr, http_url, http_ev_handler, NULL);
     mg_timer_add(&mgr, 1000, MG_TIMER_REPEAT | MG_TIMER_RUN_NOW, timer_cb, NULL);
